@@ -1,5 +1,5 @@
 # online-tutoring-webrtc
-Online tutoring platform, collaborating trainer and trainees online using video chat sessions.
+Online tutoring platform, collaborating trainer and trainees online using video chat sessions.It is a JavaScript wrapper library runs top over RTCPeerConnection API to support all possible peer-to-peer features.
 
 # Installation Guide
 
