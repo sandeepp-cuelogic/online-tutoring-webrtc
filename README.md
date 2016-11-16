@@ -4,8 +4,8 @@ Online tutoring platform, collaborating trainer and trainees online using video 
 # Installation Guide
 
 ```sh
-git clone https://github.com/wasims-cuelogic/webrtc-demo.git
-cd webrtc-demo
+git clone https://github.com/sandeepp-cuelogic/online-tutoring-webrtc.git
+cd online-tutoring-webrtc
 sudo npm install --save-dev
 ```
 
