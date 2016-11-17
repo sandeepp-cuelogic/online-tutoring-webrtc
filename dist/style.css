@@ -62,8 +62,8 @@ footer a:hover, footer a:focus {
 }
 
 h1, h2 {
-    border-bottom: 1px solid rgb(189, 189, 189);
-    display: inline;
+    /*border-bottom: 1px solid rgb(189, 189, 189);
+    display: inline;*/
     font-weight: normal;
     line-height: 36px;
     padding: 0 0 3px 0;

@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="/dist/style.css">
 
-    <title>Video Conferencing using RTCMultiConnection</title>
+    <title>Video Conferencing using WebRTC MultiConnection</title>
 
     <meta name="description" content="Many-to-Many Video Conferencing using RTCMultiConnection" />
     <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
@@ -90,17 +90,15 @@
 
         <div class="github-stargazers"></div>
 
-        <blockquote>
-            Mesh networking model is used to implement many-to-many video connection.<br>
-            All users can watch each other; all of them can speak as well.
+        <blockquote>            
+            All users can watch each other, all of them can speak as well.
         </blockquote>
 
         <section>
-         <br>   
-        <div class="share-section">
-            <img id="shared-part-of-screen-preview" style="max-width:100%;">
-        </div>
-            
+            <br>   
+            <div class="share-section">
+                <img id="shared-part-of-screen-preview" style="max-width:100%;">
+            </div>            
         </section>
 
         <section class="experiment">
@@ -110,12 +108,12 @@
                 <button id="join-room">Join Room</button>
                 <button id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>
                 <button id="btn-share-part-of-sreen" disabled>Share Whiteboard</button>
+                <!-- <button id="close-connection">Hang Up</button> -->                
 
                 <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
             </div>
                 
             <div id="videos-container"></div>
-
         </section>
 
 
@@ -195,6 +193,13 @@
                     }
                 });
             };
+
+
+            // document.getElementById("close-connection").addEventListener("click", function(event) {
+            //   connection.attachStreams[0].stop();
+            //  connection.disconnect();
+            //connection.streams.stop();
+            // });
 
             // ......................................................
             // ..................RTCMultiConnection Code.............
