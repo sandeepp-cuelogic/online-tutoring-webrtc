@@ -54,6 +54,24 @@ module.exports = exports = function(app, socketCallback) {
     }
 
     function onConnection(socket) {
+
+        //whiteboard.init($("#myCanvas"), socket);
+
+
+        // at this point a client has connected
+        socket.on("draw", function(data) {
+            socket.broadcast.emit("draw", data);
+        });
+        
+        socket.on("draw begin path", function() {
+            socket.broadcast.emit("draw begin path");
+        });
+
+
+
+
+
+
         var params = socket.handshake.query;
         var socketMessageEvent = params.msgEvent || 'RTCMultiConnection-Message';
 

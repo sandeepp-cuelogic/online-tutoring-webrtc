@@ -15,9 +15,10 @@
     <meta name="description" content="Many-to-Many Video Conferencing using RTCMultiConnection" />
     <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
 
-    <script src="/dist/jquery-1.5.2.min.js" type="text/javascript" ></script>
-    <script src="/dist/jquery.jqscribble.js" type="text/javascript"></script>
-    <script src="/dist/jqscribble.extrabrushes.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript" ></script>
+    <script src="/dist/whiteboard.js"></script>
+    <!-- <script src="/dist/jquery.jqscribble.js" type="text/javascript"></script>
+    <script src="/dist/jqscribble.extrabrushes.js" type="text/javascript"></script> -->
 
     <style>
         * {
@@ -75,7 +76,7 @@
             .column-right {
                 display: inline; 
                 float: right;
-            }
+            }            
 
 
     </style>
@@ -112,12 +113,21 @@
 
                 <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
             </div>
-                
+                    
             <div id="videos-container"></div>
         </section>
 
-
         <section>
+            <div id="whiteboard-container">
+                <canvas id="myCanvas" width="790" height="400" style="border: 1px solid; margin: 0 0 0 54px;"></canvas>           
+            </div>
+        </section>
+
+
+        
+
+
+        <!-- <section>
             <div style="overflow: hidden; margin-bottom: 5px;">
                 <div class="column-left links">
                     <strong>BRUSHES:</strong>
@@ -151,7 +161,7 @@
                 <a href="#" onclick='$("#test").data("jqScribble").save();'>Save</a>
                 <a href="#" onclick='save();'>Custom Save</a>
             </div>
-        </section>
+        </section> -->
 
 
 
@@ -165,9 +175,20 @@
         <script src="/socket.io/socket.io.js"></script>
 
         <!-- screen share -->
-        <script src="https://cdn.webrtc-experiment.com/screenshot.js"> </script>
+        <!-- <script src="https://cdn.webrtc-experiment.com/screenshot.js"> </script> -->
 
         <script>
+
+
+            var socket = io();
+                  socket.on("connect", function() {
+                    /* at this point we have connected to the server,
+                    so we can call our initialization function.
+                    We pass our canvas (#myCanvas) and socket */
+                    whiteboard.init($("#myCanvas"), socket);
+
+            });
+
             // ......................................................
             // .......................UI Code........................
             // ......................................................
@@ -236,38 +257,38 @@
             // ..................Whiteboard screen share code........
             // ......................................................
 
-            connection.onopen = function() {
-                if(!lastSharedScreenShot.length) {
-                    document.getElementById('btn-share-part-of-sreen').disabled = false;
-                }
-            };
+            // connection.onopen = function() {
+            //     if(!lastSharedScreenShot.length) {
+            //         document.getElementById('btn-share-part-of-sreen').disabled = false;
+            //     }
+            // };
             
-            document.getElementById('btn-share-part-of-sreen').onclick = function() {
-                this.disabled = true;
-                connection.sharePartOfScreen(document.getElementById('part-of-screen-to-be-shared'));
-            };
+            // document.getElementById('btn-share-part-of-sreen').onclick = function() {
+            //     this.disabled = true;
+            //     connection.sharePartOfScreen(document.getElementById('part-of-screen-to-be-shared'));
+            // };
 
-            var sharedPartOfScreenPreview = document.getElementById('shared-part-of-screen-preview');
-            connection.onmessage = function(event) {
-                sharedPartOfScreenPreview.src = event.data;
-            };
+            // var sharedPartOfScreenPreview = document.getElementById('shared-part-of-screen-preview');
+            // connection.onmessage = function(event) {
+            //     sharedPartOfScreenPreview.src = event.data;
+            // };
 
 
-            var lastSharedScreenShot = '';
-            connection.sharePartOfScreen = function(element) {
-                html2canvas(element, {
-                    onrendered: function(canvas) {
-                        var screenshot = canvas.toDataURL('image/png', 1);
-                        if(screenshot === lastSharedScreenShot) {
-                            connection.sharePartOfScreen(element);
-                            return;
-                        }
-                        connection.send(screenshot);
-                        connection.sharePartOfScreen(element);
-                    },
-                    grabMouse: true
-                });
-            };
+            // var lastSharedScreenShot = '';
+            // connection.sharePartOfScreen = function(element) {
+            //     html2canvas(element, {
+            //         onrendered: function(canvas) {
+            //             var screenshot = canvas.toDataURL('image/png', 1);
+            //             if(screenshot === lastSharedScreenShot) {
+            //                 connection.sharePartOfScreen(element);
+            //                 return;
+            //             }
+            //             connection.send(screenshot);
+            //             connection.sharePartOfScreen(element);
+            //         },
+            //         grabMouse: true
+            //     });
+            // };
 
 
 
@@ -391,28 +412,28 @@
             // ......................Scribble Whiteboard...............
             // ......................................................
 
-            function save()
-            {
-                $("#test").data("jqScribble").save(function(imageData)
-                {
-                    if(confirm("This will write a file using the example image_save.php. Is that cool with you?"))
-                    {
-                        $.post('image_save.php', {imagedata: imageData}, function(response)
-                        {
-                            $('body').append(response);
-                        }); 
-                    }
-                });
-            }
-            function addImage()
-            {
-                var img = prompt("Enter the URL of the image.");
-                if(img !== '')$("#test").data("jqScribble").update({backgroundImage: img});
-            }
-            $(document).ready(function()
-            {
-                $("#test").jqScribble();
-            });
+            // function save()
+            // {
+            //     $("#test").data("jqScribble").save(function(imageData)
+            //     {
+            //         if(confirm("This will write a file using the example image_save.php. Is that cool with you?"))
+            //         {
+            //             $.post('image_save.php', {imagedata: imageData}, function(response)
+            //             {
+            //                 $('body').append(response);
+            //             }); 
+            //         }
+            //     });
+            // }
+            // function addImage()
+            // {
+            //     var img = prompt("Enter the URL of the image.");
+            //     if(img !== '')$("#test").data("jqScribble").update({backgroundImage: img});
+            // }
+            // $(document).ready(function()
+            // {
+            //     $("#test").jqScribble();
+            // });
 
 
 
