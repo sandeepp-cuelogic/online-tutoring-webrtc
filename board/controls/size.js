@@ -17,7 +17,7 @@ DrawingBoard.Control.Size = DrawingBoard.Control.extend({
 		var tpl = $.inArray(this.opts.type, this.types) > -1 ? this['_' + this.opts.type + 'Template']() : false;
 		if (!tpl) return false;
 
-		this.val = this.board.opts.size;
+		this.val = 3;//this.board.opts.size;
 
 		this.$el.append( $( tpl ) );
 		this.$el.attr('data-drawing-board-type', this.opts.type);
