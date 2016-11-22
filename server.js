@@ -152,7 +152,8 @@ function runServer() {
         var addr = app.address();
 
         if (addr.address === '0.0.0.0') {
-            addr.address = '172.21.31.175';
+            //addr.address = '172.21.31.175';
+            addr.address = 'localhost';
         }
 
         console.log('Server listening at ' + (isUseHTTPs ? 'https' : 'http') + '://' + addr.address + ':' + addr.port);

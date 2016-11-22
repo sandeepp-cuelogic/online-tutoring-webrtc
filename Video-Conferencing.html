@@ -8,7 +8,7 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 
-    <link rel="stylesheet" href="/dist/style.css">
+    <link rel="stylesheet" href="/dist/style.css" >
 
     <title>Video Conferencing using WebRTC MultiConnection</title>
 
@@ -16,9 +16,17 @@
     <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
 
     <script src="/dist/jquery-1.11.2.min.js" type="text/javascript" ></script>
-    <script src="/dist/whiteboard.js"></script>
+    
     <!-- <script src="/dist/jquery.jqscribble.js" type="text/javascript"></script>
     <script src="/dist/jqscribble.extrabrushes.js" type="text/javascript"></script> -->
+
+
+
+    <!-- <link rel="stylesheet" href="board/prism.css"> -->
+    <!-- <link rel="stylesheet" href="board/website.css"> -->
+    <link rel="stylesheet" href="board/drawingboard.css">
+
+
 
     <style>
         * {
@@ -108,7 +116,7 @@
                 <button id="open-room">Open Room</button>
                 <button id="join-room">Join Room</button>
                 <button id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>
-                <button id="btn-share-part-of-sreen" disabled>Share Whiteboard</button>
+                <!-- <button id="btn-share-part-of-sreen" disabled>Share Whiteboard</button> -->
                 <!-- <button id="close-connection">Hang Up</button> -->                
 
                 <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
@@ -118,10 +126,18 @@
         </section>
 
         <section>
+
+        <div class="board drawing-board" id="default-board"></div>            
+
             <div id="whiteboard-container">
                 <canvas id="myCanvas" width="790" height="400" style="border: 1px solid; margin: 0 0 0 54px;"></canvas>           
             </div>
+
         </section>
+
+
+
+
 
 
         
@@ -174,10 +190,48 @@
         <!-- socket.io for signaling -->
         <script src="/socket.io/socket.io.js"></script>
 
+        <!-- Whiteboard -->
+        <script src="/dist/whiteboard.js"></script>
+
         <!-- screen share -->
         <!-- <script src="https://cdn.webrtc-experiment.com/screenshot.js"> </script> -->
 
+
+
+        <script src="board/simple-undo.js"></script>
+
+
+
+        <script src="board/utils.js"></script>
+        <script src="board/board.js"></script>
+        <script src="board/controls/control.js"></script>
+        <script src="board/controls/color.js"></script>
+        <script src="board/controls/drawingmode.js"></script>
+        <script src="board/controls/navigation.js"></script>
+        <script src="board/controls/size.js"></script>
+        <script src="board/controls/download.js"></script>
+
+
+        <!-- totally not drawingboard-related code -->
+        <!-- <script src="board/prism.js"></script>
+        <script src="board/script.js"></script> -->
+
         <script>
+
+            $(document).ready(function(){
+                $('.drawing-board-control-navigation-forward').css('display','none');
+                $('.drawing-board-control-navigation-back').css('display','none');
+                $('.drawing-board-control-drawingmode-pencil-button').css('display','none'); 
+                $('.drawing-board-control-drawingmode-eraser-button').css('display','none'); 
+                $('.drawing-board-control-drawingmode-filler-button ').css('display','none');                                         
+            });
+        
+        
+
+            //create the drawingboard by passing it the #id of the wanted container
+            var defaultBoard = new DrawingBoard.Board('default-board');
+
+            var globColor = "";
 
 
             var socket = io();
@@ -186,6 +240,7 @@
                     so we can call our initialization function.
                     We pass our canvas (#myCanvas) and socket */
                     whiteboard.init($("#myCanvas"), socket);
+                    //whiteboard.setColor('#3f07fff');                    
 
             });
 
@@ -194,7 +249,7 @@
             // ......................................................
 
             document.getElementById('open-room').onclick = function() {
-                document.getElementById('btn-share-part-of-sreen').disabled = false;
+                //document.getElementById('btn-share-part-of-sreen').disabled = false;
                 disableInputButtons();
                 connection.open(document.getElementById('room-id').value, function() {
                     showRoomURL(connection.sessionid);

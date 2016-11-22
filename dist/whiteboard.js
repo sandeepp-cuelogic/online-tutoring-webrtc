@@ -7,7 +7,8 @@ var whiteboard = new function() {
 	
 	// use `whiteboard.setColor` and `whiteboard.setThickness`
 	// to change the values of the color and thickness variables
-	var color = "#4d4d4d"; 		// default color
+	//var color = "#4d4d4d"; 		// default color
+	var color = "#000"; 		// default color
 	var thickness = 4; 		// default thickness
 
 	/**
@@ -18,7 +19,8 @@ var whiteboard = new function() {
 	 */
 	var SocketEnum = {
 		DRAW: "draw",
-		DRAWBEGINPATH: "draw begin path"
+		DRAWBEGINPATH: "draw begin path",
+		CLEAR: "clear"
 	};
 
 	/**
@@ -49,12 +51,20 @@ var whiteboard = new function() {
 		// window resize handling
 		resizeCanvas();
 		$(window).resize(function() {
-			resizeCanvas();
+			//resizeCanvas();
 		});
 		
 		// socket handlers
 		socket.on(SocketEnum.DRAW, socketDraw);
 		socket.on(SocketEnum.DRAWBEGINPATH, function() { ctx.beginPath(); });
+		//socket.on(SocketEnum.CLEAR, socketClear);
+	}
+
+	this.clearCanvas = function(e,scoket){
+
+		socket.emit(SocketEnum.DRAW, function(){
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+		});
 	}
 
 	/**
@@ -87,10 +97,15 @@ var whiteboard = new function() {
 	 * 			emit the drawing data
 	 */
 	var draw = function(e, socket) {
+
+		//whiteboard.setColor = globColor;
+
+		//console.log(whiteboard.getColor());
+		//console.log("Color is "+color)
 		// It seems that layerX is non-standard. We should use something else.
 		// See more: https://developer.mozilla.org/en-US/docs/Web/API/UIEvent/layerX
-		var cX = e.originalEvent.layerX - canvas.offsetLeft;
-		var cY = e.originalEvent.layerY - canvas.offsetTop;
+		var cX = e.pageX - canvas.offsetLeft;
+		var cY = e.pageY - canvas.offsetTop;
 		
 		ctx.strokeStyle = color;
 		ctx.lineWidth = thickness;
@@ -120,6 +135,12 @@ var whiteboard = new function() {
 		ctx.lineJoin = "round";
 		ctx.lineCap = "round";
 		ctx.stroke();
+	}
+
+	var socketClear = function(data) {
+		console.log("Innn")
+		// clear the canvas for the browsers that don't fully clear it
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	}
 
 	/** 

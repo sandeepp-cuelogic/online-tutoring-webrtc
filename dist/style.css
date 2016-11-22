@@ -1,8 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
 @font-face {
-    font-family: 'Myriad';
-    src: url('https://www.webrtc-experiment.com/fonts/MyriadPro-Light.otf') format('opentype');
+    font-family: 'Myriad';    
     font-weight: 400;
 }
 
@@ -534,15 +533,13 @@ li li h2 {
 .fork-left {
     position: absolute;
     top: 0;
-    left: 0;
-    background: url('https://cdn.webrtc-experiment.com/images/fork-left.png');
+    left: 0;    
 }
 
 .fork-right {
     position: absolute;
     top: 0;
-    right: 0;
-    background: url('https://cdn.webrtc-experiment.com/images/fork-right.png');
+    right: 0;    
 }
 
 select {
