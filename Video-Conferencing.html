@@ -251,12 +251,20 @@
 
             });
 
-              socket.on('user image', image);
+              socket.on('user image', loadImage);
 
-              function image (from, base64Image) {
 
-                whiteboard.addImage(base64Image);
-                
+              function loadImage(from, base64Image) {
+
+                //whiteboard.uploadImage(base64Image,socket);
+
+                var $img = $('<img>', { src: base64Image });
+                 var canvas = $('#myCanvas')[0];
+                 var context = canvas.getContext('2d');
+
+                 $img.load(function() {
+                       context.drawImage(this, 0, 0);
+                });                
               }
 
             // ......................................................
@@ -507,7 +515,7 @@
                   var reader = new FileReader();
 
                   reader.onload = function(evt){
-                    image('me', evt.target.result);
+                    loadImage('me', evt.target.result);
                     socket.emit('user image', evt.target.result);
                   };
                   reader.readAsDataURL(data);

@@ -60,13 +60,15 @@ var whiteboard = new function() {
 		//socket.on(SocketEnum.CLEAR, socketClear);
 	}
 
-	this.addImage = function(base64Image){
-		
-		var $img = $('<img>', { src: base64Image });        
+	this.uploadImage = function(base64Image,socket){
 
-        $img.load(function() {
-          ctx.drawImage(this, 0, 0);
-        });        
+		console.log('CAlled');
+
+		// var $img = $('<img>', { src: base64Image });        
+
+  //       $img.load(function() {
+  //         ctx.drawImage(this, 0, 0);
+  //       });        
 	}
 
 	this.clearCanvas = function(e,scoket){
