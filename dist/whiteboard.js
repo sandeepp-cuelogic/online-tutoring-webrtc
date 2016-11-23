@@ -60,6 +60,15 @@ var whiteboard = new function() {
 		//socket.on(SocketEnum.CLEAR, socketClear);
 	}
 
+	this.addImage = function(base64Image){
+		
+		var $img = $('<img>', { src: base64Image });        
+
+        $img.load(function() {
+          ctx.drawImage(this, 0, 0);
+        });        
+	}
+
 	this.clearCanvas = function(e,scoket){
 
 		socket.emit(SocketEnum.DRAW, function(){

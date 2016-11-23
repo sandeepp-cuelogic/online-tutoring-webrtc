@@ -15,8 +15,7 @@
     <meta name="description" content="Many-to-Many Video Conferencing using RTCMultiConnection" />
     <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
 
-    <script src="/dist/jquery-1.11.2.min.js" type="text/javascript" ></script>
-    
+    <script src="/dist/jquery-1.11.2.min.js" type="text/javascript" ></script>   
     <!-- <script src="/dist/jquery.jqscribble.js" type="text/javascript"></script>
     <script src="/dist/jqscribble.extrabrushes.js" type="text/javascript"></script> -->
 
@@ -125,9 +124,15 @@
             <div id="videos-container"></div>
         </section>
 
+        
+
         <section>
 
-        <div class="board drawing-board" id="default-board"></div>            
+        <!-- <a href="javascript:void(0)" onclick='$("#file").trigger("click");'>Add Local Image</a> -->        
+        <input type="file" id="file" style="display:none;">
+
+        <div class="board drawing-board" id="default-board"></div>    
+        
 
             <div id="whiteboard-container">
                 <canvas id="myCanvas" width="790" height="400" style="border: 1px solid; margin: 0 0 0 54px;"></canvas>           
@@ -216,20 +221,23 @@
         <!-- <script src="board/prism.js"></script>
         <script src="board/script.js"></script> -->
 
-        <script>
-
-            $(document).ready(function(){
-                $('.drawing-board-control-navigation-forward').css('display','none');
-                $('.drawing-board-control-navigation-back').css('display','none');
-                $('.drawing-board-control-drawingmode-pencil-button').css('display','none'); 
-                $('.drawing-board-control-drawingmode-eraser-button').css('display','none'); 
-                $('.drawing-board-control-drawingmode-filler-button ').css('display','none');                                         
-            });
-        
-        
+        <script>        
 
             //create the drawingboard by passing it the #id of the wanted container
             var defaultBoard = new DrawingBoard.Board('default-board');
+
+
+            $(document).ready(function(){
+                $('.drawing-board-control-navigation-forward').remove();
+                $('.drawing-board-control-navigation-back').remove();
+                $('.drawing-board-control-drawingmode-pencil-button').remove(); 
+                $('.drawing-board-control-drawingmode-eraser-button').remove();
+                $('.drawing-board-control-drawingmode-filler-button ').remove();
+                $(".drawing-board-canvas-wrapper").remove();     
+
+
+                $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>');                                 
+            });
 
             var globColor = "";
 
@@ -239,10 +247,17 @@
                     /* at this point we have connected to the server,
                     so we can call our initialization function.
                     We pass our canvas (#myCanvas) and socket */
-                    whiteboard.init($("#myCanvas"), socket);
-                    //whiteboard.setColor('#3f07fff');                    
+                    whiteboard.init($("#myCanvas"), socket);                                    
 
             });
+
+              socket.on('user image', image);
+
+              function image (from, base64Image) {
+
+                whiteboard.addImage(base64Image);
+                
+              }
 
             // ......................................................
             // .......................UI Code........................
@@ -480,11 +495,52 @@
             //         }
             //     });
             // }
-            // function addImage()
-            // {
-            //     var img = prompt("Enter the URL of the image.");
-            //     if(img !== '')$("#test").data("jqScribble").update({backgroundImage: img});
-            // }
+            function addImage()
+            {
+                var img = prompt("Enter the URL of the image.");
+                if(img !== '') $('#file').trigger("change");
+            }
+
+
+            $('#file').bind('change', function(e){
+                  var data = e.originalEvent.target.files[0];
+                  var reader = new FileReader();
+
+                  reader.onload = function(evt){
+                    image('me', evt.target.result);
+                    socket.emit('user image', evt.target.result);
+                  };
+                  reader.readAsDataURL(data);
+                  
+                });
+
+
+
+            // $('#file').change(function(e){
+            //     var file = e.target.files[0],
+            //       imageType = /image.*/;
+
+            //     if (!file.type.match(imageType))
+            //       return;
+
+            //     var reader = new FileReader();
+            //     reader.onload = fileOnload;
+            //     reader.readAsDataURL(file);
+            //   });
+
+            // function fileOnload(e) {
+            //     var $img = $('<img>', { src: e.target.result });
+            //     var canvas = $('#myCanvas')[0];
+            //     var context = canvas.getContext('2d');
+
+            //     $img.load(function() {
+            //       context.drawImage(this, 0, 0);
+            //     });
+
+            //     //socket.emit('user image', e.target.result);
+
+
+            //   }
             // $(document).ready(function()
             // {
             //     $("#test").jqScribble();

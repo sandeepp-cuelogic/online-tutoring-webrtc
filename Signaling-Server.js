@@ -67,6 +67,12 @@ module.exports = exports = function(app, socketCallback) {
             socket.broadcast.emit("draw begin path");
         });
 
+        // socket.on('user image', function (msg) {
+          
+        //   socket.broadcast.emit('user image', socket.nickname, msg);
+          
+        // });
+
 
 
 
