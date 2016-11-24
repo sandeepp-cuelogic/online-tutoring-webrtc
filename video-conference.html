@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>WebRTC | Collaborative Whiteboard</title>
+
+<!-- Google fonts -->
+<link href='http://fonts.googleapis.com/css?family=Raleway:300,500,800|Old+Standard+TT' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:300,500,800' rel='stylesheet' type='text/css'>
+
+<!-- font awesome -->
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+<!-- bootstrap -->
+<link rel="stylesheet" href="assets/bootstrap.css" />
+
+<!-- favicon -->
+<link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+<link rel="icon" href="images/favicon.png" type="image/x-icon">
+
+<link rel="stylesheet" href="assets/style.css">
+
+
+<script src="/dist/jquery-1.11.2.min.js" type="text/javascript" ></script>
+
+</head>
+
+<body id="home">
+
+<!-- header -->
+<nav class="navbar  navbar-default" role="navigation">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.php"><img src="/assets/logo.png"  alt="Online Tutoring (WebRTC)"></a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+      
+      <ul class="nav navbar-nav">        
+        <li><a href="#">Home </a></li>
+        <li><a href="#">About</a></li>        
+        <li><a href="#">Introduction</a></li>
+        <li><a href="#">Gallery</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div><!-- Wnavbar-collapse -->
+  </div><!-- container-fluid -->
+</nav>
+<!-- header -->
+
+<!-- reservation-information -->
+<div id="information" class="spacer reserve-info ">
+<div class="container">
+<div class="row">
+<div class="col-sm-7 col-md-8" style="position: static;">
+<div class="board drawing-board" id="default-board"></div> 
+    <div id="whiteboard-container">
+        <canvas id="myCanvas" width="750" height="400" style="border: 1px solid;"></canvas>           
+    </div>
+</div>
+<div class="col-sm-5 col-md-4">
+<!-- <h3>Peer Connections</h3> -->
+    
+        <div class="form-group">
+        <label>Room Name:</label>
+        <input type="text" class="form-control"  placeholder="Name" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
+        </div>    
+
+        <div class="form-group" id="share-url" style="display: none;">
+
+        <label>Copy and share this link:</label>
+            <input type="text" class="form-control" id="room-url">
+        </div>            
+        
+        <button class="btn btn-default" id="open-room">Open Room</button>
+        <button class="btn btn-default" id="join-room">Join Room</button>
+        <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>
+
+        <div id="videos-container">
+        
+        </div> 
+
+    
+
+    <input type="file" id="file" style="display:none;">   
+</div>
+</div>  
+</div>
+</div>
+<!-- reservation-information -->
+
+<footer class="spacer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-5">
+                    <h4>Online Tutoring (WebRTC) </h4>
+                    <p><strong>WebRTC</strong> is a free, open project that provides browsers and mobile applications with Real-Time Communications (RTC) capabilities via simple APIs. The WebRTC components have been optimized to best serve this purpose. </p>
+                    <p><strong>WebRTC</strong> uses RTCPeerConnection to communicate streaming data between browsers, but also needs a mechanism to coordinate communication and to send control messages, a process known as signaling. Signaling methods and protocols are not specified by WebRTC.</p>
+                </div>              
+                 
+                <div class="col-sm-3">
+                    
+                </div>
+
+                <div class="col-sm-4 subscribe">
+                    <h4>Subscription</h4>
+                    <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Enter email id here">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Get Notify</button>
+                    </span>
+                    </div>
+                    <div class="social">
+                    <a href="#"><i class="fa fa-facebook-square" data-toggle="tooltip" data-placement="top" data-original-title="facebook"></i></a>
+                    <a href="#"><i class="fa fa-instagram"  data-toggle="tooltip" data-placement="top" data-original-title="instragram"></i></a>
+                    <a href="#"><i class="fa fa-twitter-square" data-toggle="tooltip" data-placement="top" data-original-title="twitter"></i></a>
+                    <a href="#"><i class="fa fa-pinterest-square" data-toggle="tooltip" data-placement="top" data-original-title="pinterest"></i></a>
+                    <a href="#"><i class="fa fa-tumblr-square" data-toggle="tooltip" data-placement="top" data-original-title="tumblr"></i></a>
+                    <a href="#"><i class="fa fa-youtube-square" data-toggle="tooltip" data-placement="top" data-original-title="youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!--/.row--> 
+        </div>
+        <!--/.container-->    
+    
+    <!--/.footer-bottom--> 
+</footer>
+
+<div class="text-center copyright">Powered by <a href="http://www.cuelogic.com/">www.cuelogic.com</a></div>
+
+
+<script src="/dist/RTCMultiConnection.min.js"></script>
+
+<!-- custom layout for HTML5 audio/video elements -->
+<script src="/dist/getMediaElement.js"></script>
+
+<!-- socket.io for signaling -->
+<script src="/socket.io/socket.io.js"></script>
+
+<!-- Whiteboard -->
+<script src="/dist/whiteboard.js"></script>
+
+<script src="board/simple-undo.js"></script>
+
+<script src="board/utils.js"></script>
+<script src="board/board.js"></script>
+<script src="board/controls/control.js"></script>
+<script src="board/controls/color.js"></script>
+<script src="board/controls/drawingmode.js"></script>
+<script src="board/controls/navigation.js"></script>
+<script src="board/controls/size.js"></script>
+<script src="board/controls/download.js"></script>
+
+
+
+<script>        
+
+//create the drawingboard by passing it the #id of the wanted container
+var defaultBoard = new DrawingBoard.Board('default-board');
+
+
+$(document).ready(function(){
+    $('.drawing-board-control-navigation-forward').remove();
+    $('.drawing-board-control-navigation-back').remove();
+    $('.drawing-board-control-drawingmode-pencil-button').remove(); 
+    $('.drawing-board-control-drawingmode-eraser-button').remove();
+    $('.drawing-board-control-drawingmode-filler-button ').remove();
+    $(".drawing-board-canvas-wrapper").remove();     
+
+
+    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>');                                 
+});
+
+var globColor = "";
+
+
+var socket = io();
+      socket.on("connect", function() {
+        /* at this point we have connected to the server,
+        so we can call our initialization function.
+        We pass our canvas (#myCanvas) and socket */
+        whiteboard.init($("#myCanvas"), socket);                                    
+
+});
+
+  socket.on('user image', loadImage);
+
+
+  function loadImage(from, base64Image) {
+
+    //whiteboard.uploadImage(base64Image,socket);
+
+    var $img = $('<img>', { src: base64Image });
+     var canvas = $('#myCanvas')[0];
+     var context = canvas.getContext('2d');
+
+     $img.load(function() {
+           context.drawImage(this, 0, 0);
+    });                
+  }
+
+// ......................................................
+// .......................UI Code........................
+// ......................................................
+
+document.getElementById('open-room').onclick = function() {
+    //document.getElementById('btn-share-part-of-sreen').disabled = false;
+    disableInputButtons();
+    connection.open(document.getElementById('room-id').value, function() {
+        showRoomURL(connection.sessionid);
+    });
+};
+
+document.getElementById('join-room').onclick = function() {
+    disableInputButtons();
+    connection.join(document.getElementById('room-id').value);
+};
+
+document.getElementById('open-or-join-room').onclick = function() {
+    disableInputButtons();
+    connection.openOrJoin(document.getElementById('room-id').value, function(isRoomExists, roomid) {
+        if(!isRoomExists) {
+            showRoomURL(roomid);
+        }
+    });
+};
+
+
+// ......................................................
+// ..................RTCMultiConnection Code.............
+// ......................................................
+
+var connection = new RTCMultiConnection();
+
+// by default, socket.io server is assumed to be deployed on your own URL
+connection.socketURL = '/';
+
+connection.socketMessageEvent = 'video-conference-demo';
+
+connection.session = {
+    audio: true,
+    video: true,
+    data: true
+};
+
+connection.sdpConstraints.mandatory = {
+    OfferToReceiveAudio: true,
+    OfferToReceiveVideo: true,
+    OfferToReceiveData: true
+};
+
+connection.videosContainer = document.getElementById('videos-container');
+connection.onstream = function(event) {
+    var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
+    var mediaElement = getMediaElement(event.mediaElement, {
+        title: event.userid,
+        buttons: ['full-screen'],
+        width: width,
+        showOnMouseEnter: false
+    });
+
+    connection.videosContainer.appendChild(mediaElement);
+
+    setTimeout(function() {
+        mediaElement.media.play();
+    }, 5000);
+
+    mediaElement.id = event.streamid;
+};
+
+connection.onstreamended = function(event) {
+    var mediaElement = document.getElementById(event.streamid);
+    if(mediaElement) {
+        mediaElement.parentNode.removeChild(mediaElement);
+    }
+};
+
+function disableInputButtons() {
+    document.getElementById('open-or-join-room').disabled = true;
+    document.getElementById('open-room').disabled = true;
+    document.getElementById('join-room').disabled = true;
+    document.getElementById('room-id').disabled = true;
+}
+
+// ......................................................
+// ......................Handling Room-ID................
+// ......................................................
+
+function showRoomURL(roomid) {
+    var roomHashURL = '#' + roomid;
+    var roomQueryStringURL = '?roomid=' + roomid;
+
+    var html = '<h2>Unique URL for your room:</h2><br>';
+
+    html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
+    html += '<br>';
+    html += 'QueryString URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
+
+    // var roomURLsDiv = document.getElementById('room-urls');
+    // roomURLsDiv.innerHTML = html;
+
+    // roomURLsDiv.style.display = 'block';
+
+    var shareUrl = document.getElementById('share-url');
+    shareUrl.style.display = 'block';
+
+    var urlInput = document.getElementById('room-url');
+    urlInput.value = window.location.href+roomQueryStringURL;
+}
+
+(function() {
+    var params = {},
+        r = /([^&=]+)=?([^&]*)/g;
+
+    function d(s) {
+        return decodeURIComponent(s.replace(/\+/g, ' '));
+    }
+    var match, search = window.location.search;
+    while (match = r.exec(search.substring(1)))
+        params[d(match[1])] = d(match[2]);
+    window.params = params;
+})();
+
+var roomid = '';
+if (localStorage.getItem(connection.socketMessageEvent)) {
+    roomid = localStorage.getItem(connection.socketMessageEvent);
+} else {
+    roomid = connection.token();
+}
+document.getElementById('room-id').value = roomid;
+document.getElementById('room-id').onkeyup = function() {
+    localStorage.setItem(connection.socketMessageEvent, this.value);
+};
+
+var hashString = location.hash.replace('#', '');
+if(hashString.length && hashString.indexOf('comment-') == 0) {
+  hashString = '';
+}
+
+var roomid = params.roomid;
+if(!roomid && hashString.length) {
+    roomid = hashString;
+}
+
+if(roomid && roomid.length) {
+    document.getElementById('room-id').value = roomid;
+    localStorage.setItem(connection.socketMessageEvent, roomid);
+
+    // auto-join-room
+    (function reCheckRoomPresence() {
+        connection.checkPresence(roomid, function(isRoomExists) {
+            if(isRoomExists) {
+                connection.join(roomid);
+                return;
+            }
+
+            setTimeout(reCheckRoomPresence, 5000);
+        });
+    })();
+
+    disableInputButtons();
+}
+
+function addImage()
+{
+    var img = prompt("Enter the URL of the image.");
+    if(img !== '') $('#file').trigger("change");
+}
+
+
+$('#file').bind('change', function(e){
+      var data = e.originalEvent.target.files[0];
+      var reader = new FileReader();
+
+      reader.onload = function(evt){
+        loadImage('me', evt.target.result);
+        socket.emit('user image', evt.target.result);
+      };
+      reader.readAsDataURL(data);
+      
+    });
+
+</script>
+
+</body>
+</html>
+
+
+
+
+

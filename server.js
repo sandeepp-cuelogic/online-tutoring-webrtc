@@ -46,7 +46,7 @@ function serverHandler(request, response) {
                 response.writeHead(200, {
                     'Content-Type': 'text/html'
                 });
-                response.write('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=Video-Conferencing.html"></head><body></body></html>');
+                response.write('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=video-conference.html"></head><body></body></html>');
                 response.end();
                 return;
             }
@@ -66,12 +66,12 @@ function serverHandler(request, response) {
 
             if (filename.indexOf('/demos/MultiRTC/') !== -1) {
                 filename = filename.replace('/demos/MultiRTC/', '');
-                filename += 'Video-Conferencing.html';
+                filename += 'video-conference.html';
             } else if (filename.indexOf('/demos/') !== -1) {
                 filename = filename.replace('/demos/', '');
-                filename += 'Video-Conferencing.html';
+                filename += 'video-conference.html';
             } else {
-                filename += 'Video-Conferencing.html';
+                filename += 'video-conference.html';
             }
         }
 
