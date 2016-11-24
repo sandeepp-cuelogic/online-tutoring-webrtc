@@ -13,8 +13,8 @@ p{margin-bottom: 1em;line-height: 1.5em;}
 
 
 .btn{border:none !important;border-radius: 0;padding: 5px 30px;}
-.btn-default{background:#bfa145;box-shadow: none !important;color: #fff;}
-.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active{box-shadow: none !important;background:#756534;color: #fff;outline: none !important;}
+.btn-default{background:#005e9c;box-shadow: none !important;color: #fff;}
+.btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active{box-shadow: none !important;background:#5CACEE;color: #fff;outline: none !important;}
 
 .pagination>.active>a, .pagination>.active>span, .pagination>.active>a:hover, .pagination>.active>span:hover, .pagination>.active>a:focus, .pagination>.active>span:focus{background-color: #bfa145;border-color: #bfa145;}
 .pagination>li>a, .pagination>li>span{color: #bfa145;}
@@ -270,10 +270,11 @@ body::-webkit-scrollbar {
 
 
 .navbar > .container .navbar-brand {
-  background: rgba(0, 0, 0, 0) url("../assets/logo.png") no-repeat scroll 0 0 / 174px 74px;
+  background: url("logo.png") no-repeat scroll 0 0 / 174px 74px;
   height: 37px;
   margin-left: 0;
-  margin-top: 5px;
-  padding: 5px 15px 15px;
+  margin-top: 5px;  
   width: 300px;
 }
+
+
