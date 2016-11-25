@@ -62,7 +62,7 @@
 <div class="col-sm-7 col-md-8" style="position: static;">
 <div class="board drawing-board" id="default-board"></div> 
     <div id="whiteboard-container">
-        <canvas id="myCanvas" width="750" height="400" style="border: 1px solid;"></canvas>           
+        <canvas id="myCanvas" width="750" height="420" style="border: 1px solid;"></canvas>           
     </div>
 </div>
 <div class="col-sm-5 col-md-4">
@@ -81,10 +81,13 @@
         
         <button class="btn btn-default" id="open-room">Open Room</button>
         <button class="btn btn-default" id="join-room">Join Room</button>
-        <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>
+        <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>        
 
-        <div id="videos-container">
-        
+
+        <div class="form-group" id="videos-container">
+
+        <label></label>
+            
         </div> 
 
     
@@ -269,7 +272,7 @@ connection.onstream = function(event) {
     var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
     var mediaElement = getMediaElement(event.mediaElement, {
         title: event.userid,
-        buttons: ['full-screen'],
+        buttons: ['full-screen','mute-audio','stop'],
         width: width,
         showOnMouseEnter: false
     });

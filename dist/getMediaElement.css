@@ -23,6 +23,8 @@
     overflow: hidden;
     vertical-align: top;
     background: white;
+    width: 100% !important;
+    margin-bottom:10px;
 }
 
 .media-box {
