@@ -176,7 +176,14 @@ $(document).ready(function(){
     $(".drawing-board-canvas-wrapper").remove();     
 
 
-    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>');                                 
+    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>');  
+
+    $('.drawing-board-control-drawingmode-upload-button').attr('title', 'Upload Image');
+    $('.drawing-board-control-download-button').attr('title', 'Download');  
+    $('.drawing-board-control-inner').attr('title', 'Pen Size');
+    $('.drawing-board-control-navigation-reset').attr('title', 'Clear');
+    $('.drawing-board-control-colors-current').attr('title', 'Color');
+
 });
 
 var globColor = "";
