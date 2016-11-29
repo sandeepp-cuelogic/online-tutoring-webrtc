@@ -73,7 +73,6 @@ DrawingBoard.Control.Color = DrawingBoard.Control.extend({
 	},
 
 	onBoardReset: function(opts) {
-		whiteboard.saveWhiteboard($("#myCanvas"));  
 		this.board.setColor(this.$el.find('.drawing-board-control-colors-current').attr('data-color'));
 	},
 
