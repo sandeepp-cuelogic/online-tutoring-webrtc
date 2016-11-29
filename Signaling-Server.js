@@ -72,6 +72,11 @@ module.exports = exports = function(app, socketCallback) {
           socket.broadcast.emit('user image', socket.nickname, msg);
         });
 
+        // undo move
+        socket.on("undoing_move", function(){
+            io.emit("undo_move");
+        });
+
 
 
 

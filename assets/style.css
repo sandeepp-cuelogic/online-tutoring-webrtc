@@ -243,6 +243,13 @@ body::-webkit-scrollbar {
 .drawing-board-control-drawingmode-upload-button:before { content: ""; display: block; width: 0; height: 100%; }
 
 
+.drawing-board-control-drawingmode-undo-button { overflow: hidden; *text-indent: -9999px; background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAlpJREFUOI2lUktIVGEYPf9//7n3pvmYplQUR0fGjJmgbBG4yxbVyooyqQiaWoSLaOGqB5jrqEVQO83AEKaNZNTGRUK4KDNlsHxMI9kDaqa58/B6x3vv/98WMYPaw6Kz+uCc73C+wwf8J0h+aAw9PlkdK344OtpqA0CgPSwvq6xFZqqf2yJBmD4WvdcRX2/A8kOtt/5Oukw7hVGnLdg50llVU3ujsqKqSJYVCCGgJeJOyaXng8nU/Pn390O5tQnaw9KB5j2m272VxqIz0fqGRr+iqDCMZaQzKdNFicvtqSSEAHOz06+LXhp780kpANRKciVzqRRUQsP2oJ8yGdHY/Oep8bGWkat+dWL6XUlkcvxWVtdR17CjOREQ1/IJKABQiXslJsOyBSxbwLQ4jKXsTLR+4gVAnC8DB/XI3dauhbm3vcIByt3butDdTQsGkqT4IDFYnMPiHLYQqPE17d8Z39e3ujA9k7yS0pIoLtuy2Te/O1goUVJcTWktCdPKcW7baW7acW6bn0xhZwGHAMQBgNjAsa+ey1NZj6e6xCHEByDCAIBy42Zs8dXtj70ntLz4t3BATduCAOeFBLN9R7I/2I4/7npPDwUYk4uXsxpA2Js1f7AR/BefKIpVFCaEYCmV/LA4cHihUOJGqDsz1CxZSmRTaVnQ0DPQde1CnvtlAn9o+Dih9BAI80pE2uVSlQqJubCS02FkUtdj/W1P81qyfjnQHpZ5eWmOudQC5zgCKytmQgjj3EL/0eHV+p8MAMB39tEgddAiHPGNgE7a1HmwWDfxDD094m9O/id8ByHt9+xEfzuQAAAAAElFTkSuQmCC'); background-position: 50% 50%; background-repeat: no-repeat; }
+.drawing-board-control-drawingmode-undo-button:before { content: ""; display: block; width: 0; height: 100%; }
+
+
+
+.drawing-board-control-drawingmode-redo-button { overflow: hidden; *text-indent: -9999px; background-image:   url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAlBJREFUOI2lkk9Ik2Ecx7/P87zPq9OcOpcyrel0TsNqxOhUEAVdLQaTMjS8jA4dIugSRl26dS6k6J90cAvSoC4SHQoLigors+mmGKQmry430/fP8z4dwulAROl7/MHvw/f3+36B/xTZaBg4/dRtKPIQL6CVxrI1VmyYQyPxNgMAQtEenjY84eT91j4AUNYv1p69V1jharxbU11zqrxiJ6GUwdB1zM7MLME9eHGk8vUdubh3YHeV82AS6MtzEIr2cMV54J2/aU9QSmBBm5WGsM2y0nLV4SiCrq9gcnws2RBobtC0OTHY7ecAkXQVoHP/NW99IJjJZjH86e2ND1+TJS+6Gws/vh86nJwYm6aKivrmlgZJGRS1gPm7Yu61EyIxVlZedcGygdT491tfbh6/tApO1V19syNdkTBM4SHkn2GmqDBs1QtgjgKAV2XBYqerKK3NyfnF+Svr/9KiHevdVRc4Ytk2TCFgCgEwDoXQ2jUHhPooU5Fd+pX+2RvWctuRGLOFsfBjcvwl50oNU7ibMV6qqoVMYTyQA1AiLcMyISBZXp7xNvENOJ8fsiTVHU9cZSuWnkuh7kx/k8cXGJUSmJ0abZroDSc26sdGogAw+ehEIrOgTVNK4SgufRyK9vBtAQAisxnt3MqfDIqcrn1L8H32dQ7s3wogr8r+rufXHSXOy4wpEJYJXV+egS2GbVtOSWE9Sz5o7d8UAAC1HQNhXqDcVrnDRUiuZzB13U4s/lYRbxObAgAAkRjzcvUo5aSdSBmkjLmkEK9SD092buWsbekvAfXh4aExo9IAAAAASUVORK5CYII='); background-position: 50% 50%; background-repeat: no-repeat; }
+.drawing-board-control-drawingmode-redo-button:before { content: ""; display: block; width: 0; height: 100%; }
 
 
 .drawing-board-control-navigation > button { font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; margin-right: 2px; }
@@ -269,6 +276,11 @@ body::-webkit-scrollbar {
 .drawing-board-control-download-button:before { content: ""; display: block; width: 0; height: 100%; }
 
 
+.drawing-board-control-undo-button { overflow: hidden; *text-indent: -9999px; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAoBJREFUeNqMkr9PU1EUx7/vR1tQ3yu10hAmTawtBSYSy2YccFOcnDQm/gewOLnj5GYMg4sdXFxkMca4OBAwdUBe/ZkIGFp+9tHXvh/3/fTcAm01aLzJybnn3nM+95tzrnDl6Tb+sibuTmWUWj3C6/Juk+LySUmyvt0FCKKA02ryOCy6LBiu15ngMbZ5DDCNBqIw6gKM+n4nECUJru3glKry8CpjQaHVYmC2rVH82DIMMMdGGARdwJ+SPNdFS9chx+MXDNMp/NzagWNatk/nQU/hiYAoih6FYTBCBs9zUXMCbAhx2OYOv351lPOJ3EwH4LteL6Dcp/Rfu3FrstDyIizt+agpaYxNDU0M9gl4v7Ck+TYrCYLQqZHUyTtdQBiutPSGUflczSXHs5lVKwZdSOBMvwztxVvN0RtzsiyXBFHsAvL5PBSnCpXV2getILFiE2SjspYbuZzPiDSZ2vOXmlvX5yQqTmMfg9ZXqtls1wnT09OHEyAq0aFLg/gSXsSWq9wWk+p9PrCoYTwcijdLOfE7UsEufN9HGIYnT4EnTGIXe1KqtNNIvuNnGamxfi7SgQD/nIJCTbzOPQ/SQh1pud7T4M6W/8qFIw/5WAr5m7Ozsw9UVc069Fls2yJzSC5/lnc9RhaHZVnfSqUnEgXP2oBqtYqBgYG2+mKxmOVADnAcB4yxHgD1RzehKKns/LyV4gUHBweQy+UyRkdH6UKJ6fQDFxcXoWkaXJeRuTgUGCdLQJ9bx72lGZimGWs2m+083oN+2iiFQiGxvLy8RrDzudyltgrG3N8U2G8CrPz4sGYYRqJSqWR4H/jNWbJhUjAWi8XG8R/L87yPpGCVttVfAgwAVpZR+8tZC08AAAAASUVORK5CYII='); background-position: 50% 50%; background-repeat: no-repeat; }
+.drawing-board-control-undo-button:before { content: ""; display: block; width: 0; height: 100%; }
+
+
+
 .navbar > .container .navbar-brand {
   background: url("logo.png") no-repeat scroll 0 0 / 174px 74px;
   height: 37px;
@@ -276,5 +288,13 @@ body::-webkit-scrollbar {
   margin-top: 5px;  
   width: 300px;
 }
-
+#myCanvas{
+    width: 100%;
+    height: 100%;    
+}
+#whiteboard-container{
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    height: 420px;
+}
 

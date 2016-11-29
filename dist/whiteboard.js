@@ -23,6 +23,77 @@ var whiteboard = new function() {
 		CLEAR: "clear"
 	};
 
+
+
+	/*
+	*For Undo Redo functionality
+	*/
+
+
+	this.cUndo = function(canvasObj, ctx){
+
+		canvas = canvasObj.get(0);
+		
+		ctx = canvas.getContext("2d");
+
+		history.undo(canvas, ctx);
+	}
+
+	this.cRedo = function(canvasObj, ctx){
+
+		canvas = canvasObj.get(0);
+		
+		ctx = canvas.getContext("2d");
+
+		history.redo(canvas, ctx);
+	}
+
+	this.saveWhiteboard = function(canvasObj, ctx){
+
+		canvas = canvasObj.get(0);
+		
+		ctx = canvas.getContext("2d");
+
+		history.saveState(canvas);
+
+	}
+
+	var history = {
+	    redo_list: [],
+	    undo_list: [],
+	    saveState: function(canvas, list, keep_redo) {
+	    	
+	      keep_redo = keep_redo || false;
+	      if(!keep_redo) {
+	        this.redo_list = [];
+	      }
+	      
+	      (list || this.undo_list).push(canvas.toDataURL());   
+	    },
+	    undo: function(canvas, ctx) {
+	      this.restoreState(canvas, ctx, this.undo_list, this.redo_list);
+	    },
+	    redo: function(canvas, ctx) {
+	      this.restoreState(canvas, ctx, this.redo_list, this.undo_list);
+	    },
+	    restoreState: function(canvas, ctx,  pop, push) {
+	      if(pop.length) {
+	        this.saveState(canvas, push, true);
+	        var restore_state = pop.pop();
+	        var img = document.createElement("img");
+	        img.src = restore_state;
+
+	        img.onload = function() {
+
+	         	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	         	ctx.drawImage(img, 0, 0);
+	          	//ctx.clearRect(0, 0, 600, 400);
+	          	//ctx.drawImage(img, 0, 0, 600, 400, 0, 0, 600, 400);  
+	        }
+	      }
+	    }
+	  }
+
 	/**
 	 * Initialize the whiteboard-related stuff
 	 * 
@@ -37,16 +108,61 @@ var whiteboard = new function() {
 		ctx = canvas.getContext("2d");
 		
 		// canvas mouse events
-		canvasObj.mousedown(function(e) {
+		canvasObj.mousedown(function(e) {			
 			ctx.beginPath();
 			socket.emit(SocketEnum.DRAWBEGINPATH);
+
+			history.saveState(canvas);
 		});
 		canvasObj.mousemove(function(e) {
-			// check if we're holding the left click down while moving the mouse
-			if (e.buttons == 1) {
-				draw(e, socket);
+
+			if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+			 	draw(e, socket);
 			}
+			else{
+				// check if we're holding the left click down while moving the mouse
+				if (e.buttons == 1) {
+					draw(e, socket);
+				}
+			}			
 		});
+
+
+		// Get the position of a touch relative to the canvas
+		function getTouchPos(canvasDom, touchEvent) {
+		  var rect = canvasDom.getBoundingClientRect();
+		  return {
+		    x: touchEvent.touches[0].clientX - rect.left,
+		    y: touchEvent.touches[0].clientY - rect.top
+		  };
+		}
+
+
+
+		canvas.addEventListener("touchstart", function (e) {
+        	mousePos = getTouchPos(canvas, e);
+			  var touch = e.touches[0];
+			  var mouseEvent = new MouseEvent("mousedown", {
+			    clientX: touch.clientX,
+			    clientY: touch.clientY
+			  });
+			  canvas.dispatchEvent(mouseEvent);
+		}, false);
+
+
+		canvas.addEventListener("touchend", function (e) {
+		  var mouseEvent = new MouseEvent("mouseup", {});
+		  canvas.dispatchEvent(mouseEvent);
+		}, false);
+
+		canvas.addEventListener("touchmove", function (e) {
+		  var touch = e.touches[0];
+		  var mouseEvent = new MouseEvent("mousemove", {
+		    clientX: touch.clientX,
+		    clientY: touch.clientY
+		  });
+		  canvas.dispatchEvent(mouseEvent);
+		}, false);
 		
 		// window resize handling
 		resizeCanvas();

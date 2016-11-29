@@ -62,7 +62,8 @@
 <div class="col-sm-7 col-md-8" style="position: static;">
 <div class="board drawing-board" id="default-board"></div> 
     <div id="whiteboard-container">
-        <canvas id="myCanvas" width="750" height="420" style="border: 1px solid;"></canvas>           
+        <!-- <canvas id="myCanvas" width="750" height="420" style="border: 1px solid;"></canvas>  --> 
+        <canvas id="myCanvas"></canvas>
     </div>
 </div>
 <div class="col-sm-5 col-md-4">
@@ -80,7 +81,7 @@
         </div>            
         
         <button class="btn btn-default" id="open-room">Open Room</button>
-        <button class="btn btn-default" id="join-room">Join Room</button>
+        <button class="btn btn-default" id="join-room">Join Room</button>        
         <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>        
 
 
@@ -164,13 +165,13 @@
 
 
 
-<script>        
+<script> 
 
-//create the drawingboard by passing it the #id of the wanted container
-var defaultBoard = new DrawingBoard.Board('default-board');
 
 
 $(document).ready(function(){
+
+    
     $('.drawing-board-control-navigation-forward').remove();
     $('.drawing-board-control-navigation-back').remove();
     $('.drawing-board-control-drawingmode-pencil-button').remove(); 
@@ -179,7 +180,14 @@ $(document).ready(function(){
     $(".drawing-board-canvas-wrapper").remove();     
 
 
-    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>');  
+    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-drawingmode"><button class="drawing-board-control-drawingmode-upload-button" onclick=$("#file").trigger("click");></button></div>'); 
+
+
+    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-undo"><button class="drawing-board-control-drawingmode-undo-button" id="btn-undo" title="Undo"></button></div>'); 
+
+    $('.drawing-board-controls').append('<div class="drawing-board-control drawing-board-control-redo"><button class="drawing-board-control-drawingmode-redo-button" id="btn-redo" title="Redo"></button></div>'); 
+
+
 
     $('.drawing-board-control-drawingmode-upload-button').attr('title', 'Upload Image');
     $('.drawing-board-control-download-button').attr('title', 'Download');  
@@ -188,6 +196,31 @@ $(document).ready(function(){
     $('.drawing-board-control-colors-current').attr('title', 'Color');
 
 });
+
+
+// Prevent scrolling when touching the canvas
+var myCanvas = $('#myCanvas')[0];
+
+document.body.addEventListener("touchstart", function (e) {
+  if (e.target == myCanvas) {
+    e.preventDefault();
+  }
+}, false);
+document.body.addEventListener("touchend", function (e) {
+  if (e.target == myCanvas) {
+    e.preventDefault();
+  }
+}, false);
+document.body.addEventListener("touchmove", function (e) {
+  if (e.target == myCanvas) {
+    e.preventDefault();
+  }
+}, false);
+
+
+
+//create the drawingboard by passing it the #id of the wanted container
+var defaultBoard = new DrawingBoard.Board('default-board');
 
 var globColor = "";
 
@@ -204,6 +237,14 @@ var socket = io();
   socket.on('user image', loadImage);
 
 
+
+  socket.on("undo_move", function(){
+    //canvas.undoStep();
+    whiteboard.cUndo($("#myCanvas"));
+    
+  });
+
+
   function loadImage(from, base64Image) {
 
     //whiteboard.uploadImage(base64Image,socket);
@@ -212,10 +253,33 @@ var socket = io();
      var canvas = $('#myCanvas')[0];
      var context = canvas.getContext('2d');
 
-     $img.load(function() {
+     $img.load(function() {     
+
            context.drawImage(this, 0, 0);
+
+           //whiteboard.saveWhiteboard($("#myCanvas")); 
     });                
   }
+
+
+$(window).load(function() {
+     document.getElementById('btn-undo').onclick = function() {
+               
+        //whiteboard.cUndo($("#myCanvas"));
+
+        socket.emit("undoing_move");
+    };
+
+    document.getElementById('btn-redo').onclick = function() {
+               
+        whiteboard.cRedo($("#myCanvas"));
+    };
+});
+
+
+  
+
+
 
 // ......................................................
 // .......................UI Code........................
