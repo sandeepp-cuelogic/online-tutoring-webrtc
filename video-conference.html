@@ -245,6 +245,13 @@ var socket = io();
   });
 
 
+  socket.on("redo_move", function(){
+    //canvas.undoStep();
+    whiteboard.cRedo($("#myCanvas"));
+    
+  });
+
+
   function loadImage(from, base64Image) {
 
     //whiteboard.uploadImage(base64Image,socket);
@@ -256,9 +263,9 @@ var socket = io();
      $img.load(function() {     
 
            context.drawImage(this, 0, 0);
+    });
 
-           //whiteboard.saveWhiteboard($("#myCanvas")); 
-    });                
+    whiteboard.saveWhiteboard($("#myCanvas"));                 
   }
 
 
@@ -272,7 +279,9 @@ $(window).load(function() {
 
     document.getElementById('btn-redo').onclick = function() {
                
-        whiteboard.cRedo($("#myCanvas"));
+        //whiteboard.cRedo($("#myCanvas"));
+
+        socket.emit("redoing_move");
     };
 });
 

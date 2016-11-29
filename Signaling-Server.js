@@ -76,6 +76,11 @@ module.exports = exports = function(app, socketCallback) {
         socket.on("undoing_move", function(){
             io.emit("undo_move");
         });
+        
+        // redo move
+        socket.on("redoing_move", function(){
+            io.emit("redo_move");
+        });
 
 
 

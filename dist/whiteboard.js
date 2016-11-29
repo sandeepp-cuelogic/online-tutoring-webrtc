@@ -86,9 +86,7 @@ var whiteboard = new function() {
 	        img.onload = function() {
 
 	         	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	         	ctx.drawImage(img, 0, 0);
-	          	//ctx.clearRect(0, 0, 600, 400);
-	          	//ctx.drawImage(img, 0, 0, 600, 400, 0, 0, 600, 400);  
+	         	ctx.drawImage(img, 0, 0);	          	  
 	        }
 	      }
 	    }
@@ -108,11 +106,10 @@ var whiteboard = new function() {
 		ctx = canvas.getContext("2d");
 		
 		// canvas mouse events
-		canvasObj.mousedown(function(e) {			
+		canvasObj.mousedown(function(e) {	
+			history.saveState(canvas);		
 			ctx.beginPath();
-			socket.emit(SocketEnum.DRAWBEGINPATH);
-
-			history.saveState(canvas);
+			socket.emit(SocketEnum.DRAWBEGINPATH);			
 		});
 		canvasObj.mousemove(function(e) {
 
@@ -172,7 +169,7 @@ var whiteboard = new function() {
 		
 		// socket handlers
 		socket.on(SocketEnum.DRAW, socketDraw);
-		socket.on(SocketEnum.DRAWBEGINPATH, function() { ctx.beginPath(); });
+		socket.on(SocketEnum.DRAWBEGINPATH, function() { ctx.beginPath(); history.saveState(canvas); });
 		//socket.on(SocketEnum.CLEAR, socketClear);
 	}
 
