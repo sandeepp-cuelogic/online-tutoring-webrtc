@@ -8,7 +8,7 @@ var whiteboard = new function() {
 	// use `whiteboard.setColor` and `whiteboard.setThickness`
 	// to change the values of the color and thickness variables
 	//var color = "#4d4d4d"; 		// default color
-	var color = "#000"; 		// default color
+	var color = "#969696"; 		// default color
 	var thickness = 4; 		// default thickness
 
 	/**

@@ -56,7 +56,7 @@
 <!-- header -->
 
 <!-- reservation-information -->
-<div id="information" class="spacer reserve-info ">
+<div id="information" class="spacer reserve-info "><h6></h6>
 <div class="container">
 <div class="row">
 <div class="col-sm-7 col-md-8" style="position: static;">
@@ -68,22 +68,29 @@
 </div>
 <div class="col-sm-5 col-md-4">
 <!-- <h3>Peer Connections</h3> -->
+
+        <div class="form-group" id="record-btns" style="display: none;">                        
+            <button class="btn btn-default" id="start">Start Recording</button> 
+            <button class="btn btn-default" id="stop" disabled>Stop Recording</button>
+        </div>
+
+        <div class="form-group">
+            <p id="download-link"></p>            
+        </div>
     
         <div class="form-group">
-        <label>Room Name:</label>
-        <input type="text" class="form-control"  placeholder="Name" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
+            <label>Room Name:</label>
+            <input type="text" class="form-control"  placeholder="Name" id="room-id" value="abcdef" autocorrect=off autocapitalize=off size=20>
         </div>    
 
         <div class="form-group" id="share-url" style="display: none;">
 
         <label>Copy and share this link:</label>
             <input type="text" class="form-control" id="room-url">
-        </div>            
+        </div>                
         
         <button class="btn btn-default" id="open-room">Open Room</button>
         <button class="btn btn-default" id="join-room">Join Room</button>        
-        <!-- <button class="btn btn-default" id="start">Start</button> 
-        <button class="btn btn-default" id="stop">Stop</button> --> 
         <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>        
 
 
@@ -146,8 +153,8 @@
 <script src="/dist/RTCMultiConnection.min.js"></script>
 
 <!-- For audio and screen recording -->
-<!-- <script src="https://cdn.WebRTC-Experiment.com/RecordRTC.js"></script>
-<script src="https://cdn.webrtc-experiment.com/screenshot.js"></script> -->
+<script src="/dist/RecordRTC.js"></script>
+<script src="/dist/screenshot.js"></script>
 
 
 
@@ -225,13 +232,13 @@ document.body.addEventListener("touchmove", function (e) {
 
 
 //create the drawingboard by passing it the #id of the wanted container
-var defaultBoard = new DrawingBoard.Board('default-board');
+var defaultBoard = new DrawingBoard.Board('default-board',{color: "#969696"});
 
 var globColor = "";
 
 
 var socket = io();
-      socket.on("connect", function() {
+      socket.on("connect", function() {        
         /* at this point we have connected to the server,
         so we can call our initialization function.
         We pass our canvas (#myCanvas) and socket */
@@ -240,7 +247,6 @@ var socket = io();
 });
 
   socket.on('user image', loadImage);
-
 
 
   socket.on("undo_move", function(){
@@ -402,6 +408,10 @@ function showRoomURL(roomid) {
 
     var urlInput = document.getElementById('room-url');
     urlInput.value = window.location.href+roomQueryStringURL;
+
+
+    var recordBtns = document.getElementById('record-btns');
+    recordBtns.style.display = 'block';
 }
 
 (function() {
@@ -499,193 +509,189 @@ $('#file').bind('change', function(e){
     // (document.body || document.documentElement).appendChild(canvas2d);
 
 
-    // var isRecordingStarted = false;
-    // var isStoppedRecording = false;
-
-    // (function looper() {
-    //     if(!isRecordingStarted) {
-    //         return setTimeout(looper, 500);
-    //     }
-
-    //     html2canvas(elementToShare, {
-    //         grabMouse: true,
-    //         onrendered: function(canvas) {
-    //             context.clearRect(0, 0, canvas2d.width, canvas2d.height);
-    //             context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
-
-    //             if(isStoppedRecording) {
-    //                 return;
-    //             }
-
-    //             setTimeout(looper, 1);
-    //         }
-    //     });
-    // })();
-
-    // var canvasRecorder = RecordRTC(canvas2d, {
-    //     type: 'canvas'
-    // });
-
-    // var recordAudio;
+    var isRecordingStarted = false;
+    var isStoppedRecording = false;
 
 
-    // document.getElementById('start').onclick = function() {
-    //     this.disabled = true;
-    //     navigator.getUserMedia({ audio: true }, function(stream) {
-    //         var audio = document.createElement('audio');
-    //         audio.muted = true;
-    //         audio.volume = 0;
-    //         audio.src = URL.createObjectURL(stream);
+    var canvasObj = document.getElementById('myCanvas');
+    var recordAudio;
 
-    //         recordAudio = RecordRTC(stream, {
-    //             type: 'audio'
-    //         });
-
-    //         isStoppedRecording = false;
-    //         isRecordingStarted = true;
-
-    //         canvasRecorder.startRecording();
-    //         recordAudio.startRecording();
-
-    //         document.getElementById('stop').disabled = false;
-    //     }, function(error) { log( JSON.stringify ( error ) ); });
-    // };
-
-
-    // document.getElementById('stop').onclick = function() {
-    //     this.disabled = true;
-    //     recordAudio.stopRecording(function() {
-    //         isStoppedRecording = true;
-    //         canvasRecorder.stopRecording(function() {
-    //             convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
-    //             log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
-    //         });
-    //     });
-
-    //     document.getElementById('start').disabled = false;
-    // };
+    var canvasRecorder = RecordRTC(canvasObj, {
+        type: 'canvas',
+        disableLogs: false
+    });
 
     
-    // var workerPath = 'https://archive.org/download/ffmpeg_asm/ffmpeg_asm.js';
+    document.getElementById('start').onclick = function() {
+        
+        this.disabled = true;
+        navigator.getUserMedia({ audio: true }, function(stream) {
+            var audio = document.createElement('audio');
+            audio.muted = true;
+            audio.volume = 0;
+            audio.src = URL.createObjectURL(stream);
+
+            recordAudio = RecordRTC(stream, {
+                type: 'audio',
+                mimeType: 'audio/webm',
+                recorderType: StereoAudioRecorder,
+                bufferSize: typeof params.bufferSize == 'undefined' ? 0 : parseInt(params.bufferSize),
+                sampleRate: typeof params.sampleRate == 'undefined' ? 44100 : parseInt(params.sampleRate),
+                leftChannel: params.leftChannel || false,
+                disableLogs: params.disableLogs || false,
+                // recorderType: webrtcDetectedBrowser === 'edge' ? StereoAudioRecorder : null
+            });
+
+            isStoppedRecording = false;
+            isRecordingStarted = true;
+
+            canvasRecorder.startRecording();
+            recordAudio.startRecording();
+
+            document.getElementById('stop').disabled = false;
+        }, function(error) { log( JSON.stringify ( error ) ); });
+    };
 
 
+    document.getElementById('stop').onclick = function() {
+        document.getElementById('download-link').innerHTML = "Processing please wait...";
+        this.disabled = true;
+        recordAudio.stopRecording(function() {
+            isStoppedRecording = true;
+            canvasRecorder.stopRecording(function() {
+                convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
+                log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
+            });
+        });
 
-    // function processInWebWorker() {
-    //     var blob = URL.createObjectURL(new Blob(['importScripts("' + workerPath + '");var now = Date.now;function print(text) {postMessage({"type" : "stdout","data" : text});};onmessage = function(event) {var message = event.data;if (message.type === "command") {var Module = {print: print,printErr: print,files: message.files || [],arguments: message.arguments || [],TOTAL_MEMORY: 268435456};postMessage({"type" : "start","data" : Module.arguments.join(" ")});postMessage({"type" : "stdout","data" : "Received command: " +Module.arguments.join(" ") +((Module.TOTAL_MEMORY) ? ".  Processing with " + Module.TOTAL_MEMORY + " bits." : "")});var time = now();var result = ffmpeg_run(Module);var totalTime = now() - time;postMessage({"type" : "stdout","data" : "Finished processing (took " + totalTime + "ms)"});postMessage({"type" : "done","data" : result,"time" : totalTime});}};postMessage({"type" : "ready"});'], {
-    //         type: 'application/javascript'
-    //     }));
+        document.getElementById('start').disabled = false;
+    };
 
-    //     var worker = new Worker(blob);
-    //     URL.revokeObjectURL(blob);
-    //     return worker;
-    // }
+    
+    var workerPath = 'https://archive.org/download/ffmpeg_asm/ffmpeg_asm.js';
+    
 
-    // var worker;
+    function processInWebWorker() {
+        var blob = URL.createObjectURL(new Blob(['importScripts("' + workerPath + '");var now = Date.now;function print(text) {postMessage({"type" : "stdout","data" : text});};onmessage = function(event) {var message = event.data;if (message.type === "command") {var Module = {print: print,printErr: print,files: message.files || [],arguments: message.arguments || [],TOTAL_MEMORY: 268435456};postMessage({"type" : "start","data" : Module.arguments.join(" ")});postMessage({"type" : "stdout","data" : "Received command: " +Module.arguments.join(" ") +((Module.TOTAL_MEMORY) ? ".  Processing with " + Module.TOTAL_MEMORY + " bits." : "")});var time = now();var result = ffmpeg_run(Module);var totalTime = now() - time;postMessage({"type" : "stdout","data" : "Finished processing (took " + totalTime + "ms)"});postMessage({"type" : "done","data" : result,"time" : totalTime});}};postMessage({"type" : "ready"});'], {
+            type: 'application/javascript'
+        }));
+
+        var worker = new Worker(blob);
+        URL.revokeObjectURL(blob);
+        return worker;
+    }
+
+    var worker;
 
 
-    // function convertStreams(videoBlob, audioBlob) {
-    //     var vab;
-    //     var aab;
-    //     var buffersReady;
-    //     var workerReady;
-    //     var posted = false;
+    function convertStreams(videoBlob, audioBlob) {
+        var vab;
+        var aab;
+        var buffersReady;
+        var workerReady;
+        var posted = false;
 
-    //     var fileReader1 = new FileReader();
-    //     fileReader1.onload = function() {
-    //         vab = this.result;
+        var fileReader1 = new FileReader();
+        fileReader1.onload = function() {
+            vab = this.result;
 
-    //         if (aab) buffersReady = true;
+            if (aab) buffersReady = true;
 
-    //         if (buffersReady && workerReady && !posted) postMessage();
-    //     };
-    //     var fileReader2 = new FileReader();
-    //     fileReader2.onload = function() {
-    //         aab = this.result;
+            if (buffersReady && workerReady && !posted) postMessage();
+        };
+        var fileReader2 = new FileReader();
+        fileReader2.onload = function() {
+            aab = this.result;
 
-    //         if (vab) buffersReady = true;
+            if (vab) buffersReady = true;
 
-    //         if (buffersReady && workerReady && !posted) postMessage();
-    //     };
+            if (buffersReady && workerReady && !posted) postMessage();
+        };
 
-    //     fileReader1.readAsArrayBuffer(videoBlob);
-    //     fileReader2.readAsArrayBuffer(audioBlob);
+        fileReader1.readAsArrayBuffer(videoBlob);
+        fileReader2.readAsArrayBuffer(audioBlob);
 
-    //     if (!worker) {
-    //         worker = processInWebWorker();
-    //     }
+        if (!worker) {
+            worker = processInWebWorker();
+        }
 
-    //     worker.onmessage = function(event) {
-    //         var message = event.data;
-    //         if (message.type == "ready") {
-    //             log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file has been loaded.');
-    //             workerReady = true;
-    //             if (buffersReady)
-    //                 postMessage();
-    //         } else if (message.type == "stdout") {
-    //             log(message.data);
-    //         } else if (message.type == "start") {
-    //             log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file received ffmpeg command.');
-    //         } else if (message.type == "done") {
-    //             log(JSON.stringify(message));
+        worker.onmessage = function(event) {
+            var message = event.data;
+            if (message.type == "ready") {
+                log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file has been loaded.');
+                workerReady = true;
+                if (buffersReady)
+                    postMessage();
+            } else if (message.type == "stdout") {
+                log(message.data);
+            } else if (message.type == "start") {
+                log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file received ffmpeg command.');
+            } else if (message.type == "done") {
+                log(JSON.stringify(message));
 
-    //             var result = message.data[0];
-    //             log(JSON.stringify(result));
+                var result = message.data[0];
+                log(JSON.stringify(result));
 
-    //             var blob = new Blob([result.data], {
-    //                 type: 'video/webm'
-    //             });
+                var blob = new Blob([result.data], {
+                    type: 'video/webm'
+                });
 
-    //             log(JSON.stringify(blob));
+                log(JSON.stringify(blob));
 
-    //             PostBlob(blob);
-    //         }
-    //     };
-    //     var postMessage = function() {
-    //         posted = true;
+                PostBlob(blob);
+            }
+        };
+        var postMessage = function() {
+            posted = true;
 
-    //         worker.postMessage({
-    //             type: 'command',
-    //             arguments: [
-    //                 '-i', 'video.webm',
-    //                 '-i', 'audio.wav',
-    //                 '-c:v', 'mpeg4',
-    //                 '-c:a', 'vorbis',
-    //                 '-b:v', '6400k',
-    //                 '-b:a', '4800k',
-    //                 '-strict', 'experimental', 'output.mp4'
-    //             ],
-    //             files: [
-    //                 {
-    //                     data: new Uint8Array(vab),
-    //                     name: 'video.webm'
-    //                 },
-    //                 {
-    //                     data: new Uint8Array(aab),
-    //                     name: "audio.wav"
-    //                 }
-    //             ]
-    //         });
-    //     };
-    // }
+            worker.postMessage({
+                type: 'command',
+                arguments: [
+                    '-i', 'video.webm',
+                    '-i', 'audio.wav',
+                    '-c:v', 'mpeg4',
+                    '-c:a', 'vorbis',
+                    '-b:v', '6400k',
+                    '-b:a', '4800k',
+                    '-strict', 'experimental', 'output.mp4'
+                ],
+                files: [
+                    {
+                        data: new Uint8Array(vab),
+                        name: 'video.webm'
+                    },
+                    {
+                        data: new Uint8Array(aab),
+                        name: "audio.wav"
+                    }
+                ]
+            });
+        };
+    }
 
-    // var h6 = document.querySelector('h6');
+    var h6 = document.querySelector('h6');
+    var newLink = "";
 
-    // function PostBlob(blob) {
-    //     h6.innerHTML = '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Download Recorded Audio+Canvas file in MP4 container and play in VLC player!</a>';
-    //     h6.setAttribute('contenteditable', 'false');
-    // }
+    function PostBlob(blob) {
+        //h6.innerHTML = '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Download Recorded Audio+Canvas file in MP4 container and play in VLC player!</a>';
+        //h6.setAttribute('contenteditable', 'false');
 
-    // function log(message) {
-    //     h6.innerHTML = message;
-    //     console.log(message);
-    // }
+        newLink =  '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Please click here to download file!</a>'; 
+
+        document.getElementById('download-link').innerHTML = newLink;      
+    }
+
+    function log(message) {
+        //h6.innerHTML = message;
+        console.log(message);
+    }
 
 
 
 </script>
 
 
-<!-- <script src="https://archive.org/download/ffmpeg_asm/ffmpeg_asm.js" async> </script> -->
+<!-- <script src="/dist/ffmpeg_asm.js" async> </script> -->
 
 </body>
 </html>
