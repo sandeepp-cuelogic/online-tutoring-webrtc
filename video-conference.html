@@ -69,6 +69,8 @@
 <div class="col-sm-5 col-md-4">
 <!-- <h3>Peer Connections</h3> -->
 
+    <video id="recorded-video"></video>
+
         <div class="form-group" id="record-btns" style="display: none;">                        
             <button class="btn btn-default" id="start">Start Recording</button> 
             <button class="btn btn-default" id="stop" disabled>Stop Recording</button>
@@ -673,17 +675,27 @@ $('#file').bind('change', function(e){
     var newLink = "";
 
     function PostBlob(blob) {
+        
         //h6.innerHTML = '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Download Recorded Audio+Canvas file in MP4 container and play in VLC player!</a>';
         //h6.setAttribute('contenteditable', 'false');
 
         newLink =  '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Please click here to download file!</a>'; 
 
-        document.getElementById('download-link').innerHTML = newLink;      
+        document.getElementById('download-link').innerHTML = newLink;   
+
+        display(blob); 
     }
 
     function log(message) {
         //h6.innerHTML = message;
         console.log(message);
+    }
+
+    function display(vid){
+
+        var video = document.getElementById("recorded-video");
+        video.src = URL.createObjectURL(vid);
+
     }
 
 
