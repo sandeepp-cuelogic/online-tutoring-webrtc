@@ -428,20 +428,22 @@ DrawingBoard.Board.prototype = {
 
 	setMode: function(newMode, silent) {
 		silent = silent || false;
-		newMode = newMode || 'pencil';
+		newMode = newMode || 'pencil';		
 
-		this.ev.unbind('board:startDrawing', $.proxy(this.fill, this));
+		this.ev.unbind('board:startDrawing', $.proxy(this.fill, this));		
 
 		if (this.opts.eraserColor === "transparent")
 			this.ctx.globalCompositeOperation = newMode === "eraser" ? "destination-out" : "source-over";
 		else {
 			if (newMode === "eraser") {
+				whiteboard.setColor('#FFF');
 				if (this.opts.eraserColor === "background" && DrawingBoard.Utils.isColor(this.opts.background))
 					this.ctx.strokeStyle = this.opts.background;
 				else if (DrawingBoard.Utils.isColor(this.opts.eraserColor))
 					this.ctx.strokeStyle = this.opts.eraserColor;
 			} else if (!this.mode || this.mode === "eraser") {
-				this.ctx.strokeStyle = this.color;
+				this.ctx.strokeStyle = this.color;				
+				whiteboard.setColor(globColor);
 			}
 
 			if (newMode === "filler")

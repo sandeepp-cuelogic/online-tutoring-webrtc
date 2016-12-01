@@ -104,7 +104,7 @@
         </div>                
         
         <button class="btn btn-default" id="open-room">Open Room</button>
-        <button class="btn btn-default" id="join-room">Join Room</button>        
+        <button class="btn btn-default" id="join-room">Join Room</button>               
         <button class="btn btn-default" id="open-or-join-room" style="display: none;">Auto Open Or Join Room</button>        
 
 
@@ -201,8 +201,8 @@ $(document).ready(function(){
     
     $('.drawing-board-control-navigation-forward').remove();
     $('.drawing-board-control-navigation-back').remove();
-    $('.drawing-board-control-drawingmode-pencil-button').remove(); 
-    $('.drawing-board-control-drawingmode-eraser-button').remove();
+    //$('.drawing-board-control-drawingmode-pencil-button').remove(); 
+    //$('.drawing-board-control-drawingmode-eraser-button').remove();
     $('.drawing-board-control-drawingmode-filler-button ').remove();
     $(".drawing-board-canvas-wrapper").remove();     
 
@@ -249,7 +249,7 @@ document.body.addEventListener("touchmove", function (e) {
 //create the drawingboard by passing it the #id of the wanted container
 var defaultBoard = new DrawingBoard.Board('default-board',{color: "#969696"});
 
-var globColor = "";
+var globColor = "#969696";
 
 
 var socket = io();
@@ -312,6 +312,10 @@ $(window).load(function() {
 });
 
 
+// document.getElementById('eraser').onclick = function() {        
+    
+//     whiteboard.setColor('#FFF');
+// }
   
 
 
