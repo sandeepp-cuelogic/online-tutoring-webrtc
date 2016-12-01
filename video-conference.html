@@ -58,13 +58,19 @@
 <!-- reservation-information -->
 <div id="information" class="spacer reserve-info "><h6></h6>
 
-
-
-<div id="video-record"></div>
-
-
 <div class="container">
+
 <div class="row">
+
+
+<div class="col-sm-7 col-md-12" style="position: static; display: none" id="recorded-section">
+    <div id="video-record"></div> 
+</div>
+
+
+
+<div id="main-section">
+
 <div class="col-sm-7 col-md-8" style="position: static;">
 <div class="board drawing-board" id="default-board"></div> 
     <div id="whiteboard-container">
@@ -72,15 +78,17 @@
         <canvas id="myCanvas"></canvas>
     </div>
 </div>
+
+
 <div class="col-sm-5 col-md-4">
-<!-- <h3>Peer Connections</h3> -->    
+<!-- <h3>Peer Connections</h3> -->           
 
         <div class="form-group" id="record-btns" style="display: none;">                        
             <button class="btn btn-default" id="start">Start Recording</button> 
             <button class="btn btn-default" id="stop" disabled>Stop Recording</button>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="record-section">
             <p id="download-link"></p>            
         </div>
     
@@ -109,6 +117,7 @@
     
 
     <input type="file" id="file" style="display:none;">   
+</div>
 </div>
 </div>  
 </div>
@@ -521,17 +530,19 @@ $('#file').bind('change', function(e){
 
     var canvasObj = document.getElementById('myCanvas');
     var recordAudio;
+    var recordVideo;
 
     var canvasRecorder = RecordRTC(canvasObj, {
-        type: 'canvas',
-        disableLogs: false
+        type: 'canvas',        
+        width: 320,
+        height: 240
     });
 
     
     document.getElementById('start').onclick = function() {
         
         this.disabled = true;
-        navigator.getUserMedia({ audio: true }, function(stream) {
+        navigator.getUserMedia({ audio: true, video:true }, function(stream) {
             var audio = document.createElement('audio');
             audio.muted = true;
             audio.volume = 0;
@@ -548,11 +559,20 @@ $('#file').bind('change', function(e){
                 // recorderType: webrtcDetectedBrowser === 'edge' ? StereoAudioRecorder : null
             });
 
+
+
+            recordVideo = RecordRTC(stream, {
+                type: 'video',  
+                width: 320,
+                height: 240              
+            });
+
             isStoppedRecording = false;
             isRecordingStarted = true;
 
             canvasRecorder.startRecording();
             recordAudio.startRecording();
+            recordVideo.startRecording();
 
             document.getElementById('stop').disabled = false;
         }, function(error) { log( JSON.stringify ( error ) ); });
@@ -565,8 +585,10 @@ $('#file').bind('change', function(e){
         recordAudio.stopRecording(function() {
             isStoppedRecording = true;
             canvasRecorder.stopRecording(function() {
-                convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
-                log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
+                recordVideo.stopRecording(function(){
+                    convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
+                    log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
+                });                
             });
         });
 
@@ -683,16 +705,20 @@ $('#file').bind('change', function(e){
         //h6.innerHTML = '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Download Recorded Audio+Canvas file in MP4 container and play in VLC player!</a>';
         //h6.setAttribute('contenteditable', 'false');
 
-        newLink =  '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mp4">Please click here to download file!</a>'; 
+        newLink =  '<a href="' + URL.createObjectURL(blob) + '" target="_blank" download="Recorded Audio+Canvas File.mpeg4">Please click here to download file!</a>'; 
 
-        document.getElementById('download-link').innerHTML = newLink;   
+        //document.getElementById('download-link').innerHTML = newLink;   
 
-        display(blob); 
+        document.getElementById('download-link').style.display = 'none';
 
+        var aTag = document.createElement('a');
+        aTag.setAttribute("onclick","funHideMain();");
+        aTag.style.cursor = "pointer";
+        aTag.innerHTML = "Click to view recorded session";
+        aTag.target = "_blank";
+        document.getElementById('record-section').appendChild(aTag);
 
-
-
-
+        //display(blob); 
     }
 
     function log(message) {
@@ -700,24 +726,79 @@ $('#file').bind('change', function(e){
         console.log(message);
     }
 
+    function funHideMain(){
+        var mainSec = document.getElementById('main-section');
+        mainSec.style.display = 'none';
+
+        var recordSec = document.getElementById('recorded-section');
+        recordSec.style.display = 'block';
+
+
+        var blob = canvasRecorder.getBlob();
+
+        localStorage.setItem('canvasBlob',blob);
+
+        var video = document.createElement('video');
+        video.src = URL.createObjectURL(blob);
+        video.setAttribute('style', 'width:70%');
+        //video.setAttribute('style', 'float:left');
+        video.style.float = "left";
+        video.setAttribute('style', 'padding:5px');
+        document.getElementById("video-record").appendChild(video);
+        video.controls = true;
+        video.play();
+
+
+        var vBlob = recordVideo.getBlob();
+
+        var vvideo = document.createElement('video');
+        vvideo.src = URL.createObjectURL(vBlob);
+        vvideo.setAttribute('style', 'width:30%');
+        document.getElementById("video-record").appendChild(vvideo);
+        vvideo.controls = true;
+        vvideo.play();
+        
+    }
+
     function display(blob){
 
 
-        var remoteVideo = document.createElement("video");
-        remoteVideo.id = "rvideo";
-        remoteVideo.autoplay = true;
-        remoteVideo.type = "video/mp4";
-        remoteVideo.controls = true;
-        remoteVideo.src = URL.createObjectURL(blob);  
-        //remoteVideo.style.width= '20%';      
-        document.getElementById("video-record").append(remoteVideo);
-        console.log('Creation complete!');
+        // var remoteVideo = document.createElement("video");
+        // remoteVideo.id = "rvideo";
+        // remoteVideo.autoplay = false;
+        // remoteVideo.type = "video/mpeg4";
+        // remoteVideo.controls = true;
+        // remoteVideo.src = URL.createObjectURL(blob);  
+        // //remoteVideo.style.width= '20%';      
+        // document.getElementById("video-record").append(remoteVideo);
+        // console.log('Creation complete!');
 
         // var videoRec = document.getElementById("recorded-video");        
         // videoRec.src = URL.createObjectURL(vid);
-    }
 
 
+
+        var blob = canvasRecorder.getBlob();
+
+        localStorage.setItem('canvasBlob',blob);
+
+        var video = document.createElement('video');
+        video.src = URL.createObjectURL(blob);
+        video.setAttribute('style', 'height: 50%; width:50%');
+        document.getElementById("video-record").appendChild(video);
+        video.controls = true;
+        video.play();
+
+
+        var vBlob = recordVideo.getBlob();
+
+        var vvideo = document.createElement('video');
+        vvideo.src = URL.createObjectURL(vBlob);
+        vvideo.setAttribute('style', 'height: 50%; width:50%');
+        document.getElementById("video-record").appendChild(vvideo);
+        vvideo.controls = true;
+        vvideo.play();
+    }    
 
 </script>
 
