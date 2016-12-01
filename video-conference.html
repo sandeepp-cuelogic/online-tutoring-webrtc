@@ -27,6 +27,8 @@
 
 <body id="home">
 
+<video id="tttt" controls="" autoplay="true" name="media"><source src="blob:https://www.webrtc-experiment.com/e667e80a-286a-490a-9be4-1d0fd33e4420" type="video/webm"></video>
+
 <!-- header -->
 <nav class="navbar  navbar-default" role="navigation">
   <div class="container">
@@ -57,6 +59,12 @@
 
 <!-- reservation-information -->
 <div id="information" class="spacer reserve-info "><h6></h6>
+
+
+
+<div id="video-record"></div>
+
+
 <div class="container">
 <div class="row">
 <div class="col-sm-7 col-md-8" style="position: static;">
@@ -67,9 +75,7 @@
     </div>
 </div>
 <div class="col-sm-5 col-md-4">
-<!-- <h3>Peer Connections</h3> -->
-
-    <video id="recorded-video"></video>
+<!-- <h3>Peer Connections</h3> -->    
 
         <div class="form-group" id="record-btns" style="display: none;">                        
             <button class="btn btn-default" id="start">Start Recording</button> 
@@ -684,6 +690,11 @@ $('#file').bind('change', function(e){
         document.getElementById('download-link').innerHTML = newLink;   
 
         display(blob); 
+
+
+
+
+
     }
 
     function log(message) {
@@ -691,11 +702,21 @@ $('#file').bind('change', function(e){
         console.log(message);
     }
 
-    function display(vid){
+    function display(blob){
 
-        var video = document.getElementById("recorded-video");
-        video.src = URL.createObjectURL(vid);
 
+        var remoteVideo = document.createElement("video");
+        remoteVideo.id = "rvideo";
+        remoteVideo.autoplay = true;
+        remoteVideo.type = "video/mp4";
+        remoteVideo.controls = true;
+        remoteVideo.src = URL.createObjectURL(blob);  
+        //remoteVideo.style.width= '20%';      
+        document.getElementById("video-record").append(remoteVideo);
+        console.log('Creation complete!');
+
+        // var videoRec = document.getElementById("recorded-video");        
+        // videoRec.src = URL.createObjectURL(vid);
     }
 
 
