@@ -547,21 +547,21 @@ $('#file').bind('change', function(e){
         
         this.disabled = true;
         navigator.getUserMedia({ audio: true, video:true }, function(stream) {
-            var audio = document.createElement('audio');
-            audio.muted = true;
-            audio.volume = 0;
-            audio.src = URL.createObjectURL(stream);
+            // var audio = document.createElement('audio');
+            // audio.muted = true;
+            // audio.volume = 0;
+            // audio.src = URL.createObjectURL(stream);
 
-            recordAudio = RecordRTC(stream, {
-                type: 'audio',
-                mimeType: 'audio/webm',
-                recorderType: StereoAudioRecorder,
-                bufferSize: typeof params.bufferSize == 'undefined' ? 0 : parseInt(params.bufferSize),
-                sampleRate: typeof params.sampleRate == 'undefined' ? 44100 : parseInt(params.sampleRate),
-                leftChannel: params.leftChannel || false,
-                disableLogs: params.disableLogs || false,
-                // recorderType: webrtcDetectedBrowser === 'edge' ? StereoAudioRecorder : null
-            });
+            // recordAudio = RecordRTC(stream, {
+            //     type: 'audio',
+            //     mimeType: 'audio/webm',
+            //     recorderType: StereoAudioRecorder,
+            //     bufferSize: typeof params.bufferSize == 'undefined' ? 0 : parseInt(params.bufferSize),
+            //     sampleRate: typeof params.sampleRate == 'undefined' ? 44100 : parseInt(params.sampleRate),
+            //     leftChannel: params.leftChannel || false,
+            //     disableLogs: params.disableLogs || false,
+            //     // recorderType: webrtcDetectedBrowser === 'edge' ? StereoAudioRecorder : null
+            // });
 
 
 
@@ -575,7 +575,7 @@ $('#file').bind('change', function(e){
             isRecordingStarted = true;
 
             canvasRecorder.startRecording();
-            recordAudio.startRecording();
+            //recordAudio.startRecording();
             recordVideo.startRecording();
 
             document.getElementById('stop').disabled = false;
@@ -586,15 +586,26 @@ $('#file').bind('change', function(e){
     document.getElementById('stop').onclick = function() {
         document.getElementById('download-link').innerHTML = "Processing please wait...";
         this.disabled = true;
-        recordAudio.stopRecording(function() {
-            isStoppedRecording = true;
+        //recordAudio.stopRecording(function() {
+            
             canvasRecorder.stopRecording(function() {
+                isStoppedRecording = true;
                 recordVideo.stopRecording(function(){
-                    convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
-                    log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
+
+                    document.getElementById('download-link').style.display = 'none';
+
+                    var aTag = document.createElement('a');
+                    aTag.setAttribute("onclick","funHideMain();");
+                    aTag.style.cursor = "pointer";
+                    aTag.innerHTML = "Click to view recorded session";
+                    aTag.target = "_blank";
+                    document.getElementById('record-section').appendChild(aTag);
+
+                    //convertStreams(canvasRecorder.getBlob(), recordAudio.getBlob());
+                    //log('<a href="'+ workerPath +'" download="ffmpeg-asm.js">ffmpeg-asm.js</a> file download started. It is about 18MB in size; please be patient!');
                 });                
             });
-        });
+        //});
 
         document.getElementById('start').disabled = false;
     };
@@ -738,9 +749,7 @@ $('#file').bind('change', function(e){
         recordSec.style.display = 'block';
 
 
-        var blob = canvasRecorder.getBlob();
-
-        localStorage.setItem('canvasBlob',blob);
+        var blob = canvasRecorder.getBlob();        
 
         var video = document.createElement('video');
         video.src = URL.createObjectURL(blob);
@@ -783,8 +792,7 @@ $('#file').bind('change', function(e){
 
 
         var blob = canvasRecorder.getBlob();
-
-        localStorage.setItem('canvasBlob',blob);
+        
 
         var video = document.createElement('video');
         video.src = URL.createObjectURL(blob);
